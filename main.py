@@ -99,13 +99,14 @@ def data():
     return render_template('data.html', table=df.to_html())
 
 def create_spotify_oauth():
-    redirect_uri = os.getenv('SPOTIFY_REDIRECT_URI', default='http://localhost:5000/callback')
+    redirect_uri = os.getenv('SPOTIFY_REDIRECT_URI', default='https://flask-production-96aa.up.railway.app/callback')
     return SpotifyOAuth(
         client_id=os.getenv('SPOTIFY_CLIENT_ID'),
         client_secret=os.getenv('SPOTIFY_CLIENT_SECRET'),
         redirect_uri=redirect_uri,
         scope="user-library-read"
     )
+
 
 def get_token():
     token_info = session.get("token_info", None)
