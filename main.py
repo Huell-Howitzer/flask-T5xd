@@ -1,4 +1,4 @@
-from flask import Flask, request, redirect, session, url_for, render_template
+from flask import Flask, request, redirect, session, url_for, render_template, jsonify
 import spotipy
 from spotipy.oauth2 import SpotifyOAuth
 import pandas as pd
