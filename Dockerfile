@@ -2,7 +2,7 @@
 FROM python:3.9-slim
 
 # Set the working directory in the container
-WORKDIR /app
+WORKDIR /
 
 # Copy the Flask app code to the working directory
 COPY .. .
@@ -14,4 +14,4 @@ RUN pip install --no-cache-dir -r requirements.txt
 EXPOSE 5000
 
 # Set the entrypoint command
-CMD ["python", "app.py"]
+CMD ["python", "main.py"]
