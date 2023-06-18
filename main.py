@@ -14,7 +14,12 @@ app.config['SESSION_COOKIE_NAME'] = os.getenv('SESSION_COOKIE_NAME')
 
 @app.route('/')
 def index():
-    return render_template('index.html')
+    if 'token_info' not in session:
+        return render_template('index.html')
+    else:
+        sp_oauth = create_spotify_oauth()
+        auth_url = sp_oauth.get_authorize_url()
+        return redirect(auth_url)
 
 @app.route('/callback')
 def callback():
