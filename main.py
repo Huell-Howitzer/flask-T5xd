@@ -15,7 +15,9 @@ app.config['SESSION_COOKIE_NAME'] = os.getenv('SESSION_COOKIE_NAME')
 
 @app.route('/')
 def index():
-    return render_template('index.html')
+    return jsonify({"Choo Choo": "Welcome to your Flask app 🚅"})
+
+    # return render_template('index.html')
 
 @app.route('/callback')
 def callback():
