@@ -1,7 +1,6 @@
-from flask import Flask, request, redirect, session, url_for
+from flask import Flask, request, redirect, session, url_for, render_template
 import spotipy
 from spotipy.oauth2 import SpotifyOAuth
-from flask import Flask, jsonify
 import os
 from dotenv import load_dotenv
 import time
@@ -15,9 +14,12 @@ app.config['SESSION_COOKIE_NAME'] = os.getenv('SESSION_COOKIE_NAME')
 
 @app.route('/')
 def index():
-    sp_oauth = create_spotify_oauth()
-    auth_url = sp_oauth.get_authorize_url()
-    return redirect(auth_url)
+    if 'token_info' in session:
+        return render_template('index.html')
+    else:
+        sp_oauth = create_spotify_oauth()
+        auth_url = sp_oauth.get_authorize_url()
+        return redirect(auth_url)
 
 @app.route('/callback')
 def callback():
@@ -35,7 +37,7 @@ def redirect_page():
     code = request.args.get('code')
     token_info = sp_oauth.get_access_token(code)
     session["token_info"] = token_info
-    return redirect("https://flask-production-96aa.up.railway.app/callback")
+    return redirect(os.getenv('RAILWAY_DEPLOYMENT_URL', default='http://localhost:5000') + '/callback')
 
 @app.route('/logged_in')
 def logged_in():
@@ -47,7 +49,7 @@ def logged_in():
     return "You are logged in."
 
 def create_spotify_oauth():
-    redirect_uri = "http://localhost:5000/callback"
+    redirect_uri = os.getenv('SPOTIFY_REDIRECT_URI', default='http://localhost:5000/callback')
     return SpotifyOAuth(
         client_id=os.getenv('SPOTIFY_CLIENT_ID'),
         client_secret=os.getenv('SPOTIFY_CLIENT_SECRET'),
@@ -67,9 +69,5 @@ def get_token():
         token_info = sp_oauth.refresh_access_token(token_info['refresh_token'])
     return token_info
 
-if __name__ == "__main__":
-    app.run(debug=True, port=5000)
-
-
-
-
+if __name__ == '__main__':
+    app.run(debug=True, port=os.getenv("PORT", default=5000))
